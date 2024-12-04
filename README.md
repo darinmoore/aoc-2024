@@ -1,6 +1,6 @@
 # AOC-2024
 Python solutions for the 2024 Advent of Code http://adventofcode.com/2024
-
+Boiler-plate stolen from Tom Pollard: https://github.com/tomp/AOC-2024
 
 Overview
 --------
@@ -64,8 +64,5 @@ There's no reason you need to structure your solution code this way, too.
 If you use the `new_day.sh` machinery for your own solutions, you'll
 probably want to modify `dayN.py` to suit your own coding style.
 
-
-----
-Tom Pollard :: December 1, 2024
 
 
