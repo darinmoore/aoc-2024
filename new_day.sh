@@ -40,8 +40,3 @@ echo "Wrote $prog"
     error "Unable to download input data"
 echo "$infile has $(wc -l $infile | awk '{print $1}') lines"
 
-git add "$prog" "$desc" "$infile"
-
-vim "$prog" "$desc" "$infile"
-
-
