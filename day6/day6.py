@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-#  Advent of Code 2024 - Day 4
+#  Advent of Code 2024 - Day 6
 #
 from typing import Sequence, Union, Optional, Any, Dict, List, Tuple
 from pathlib import Path
@@ -15,39 +15,22 @@ INPUTFILE = "input.txt"
 SAMPLE_CASES = [
     (
         """
-        MMMSXXMASM
-        MSAMXMSMSA
-        AMXSXMAAMM
-        MSAMASMSMX
-        XMASAMXAMM
-        XXAMMXXAMA
-        SMSMSASXSS
-        SAXAMASAAA
-        MAMMMXMMMM
-        MXMXAXMASX
+        ....#.....
+        .........#
+        ..........
+        ..#.......
+        .......#..
+        ..........
+        .#..^.....
+        ........#.
+        #.........
+        ......#...
         """,
-        18
+        41
     ),
 ]
 
-SAMPLE_CASES2 = [
-    (
-        """
-        MMMSXXMASM
-        MSAMXMSMSA
-        AMXSXMAAMM
-        MSAMASMSMX
-        XMASAMXAMM
-        XXAMMXXAMA
-        SMSMSASXSS
-        SAXAMASAAA
-        MAMMMXMMMM
-        MXMXAXMASX
-        """,
-        9
-    ),
-]
-
+SAMPLE_CASES2 = SAMPLE_CASES
 
 
 Lines = Sequence[str]
@@ -85,61 +68,14 @@ def parse_sections(lines: Lines) -> Sections:
 
 
 # Solution
-def get_neighbors(pos, grid):
-    x,y = pos
-    neighbors = []
-    for deltaX in [-1, 0, 1]:
-        for deltaY in [-1, 0, 1]:
-            if deltaX or deltaY:
-                new_x = x + deltaX 
-                new_y = y + deltaY
-                if 0 <= new_x < len(grid) and 0 <= new_y < len(grid[0]):
-                    neighbors.append((new_x, new_y))
-    return neighbors
-
-BLOCKS = [
-    [(0,0), (0,1), (0, 2), (0, 3)],
-    [(0,0), (1,0), (2, 0), (3, 0)],
-    [(0, 0), (1, 1), (2, 2), (3, 3)],
-    [(0, 3), (1, 2), (2, 1), (3, 0)]
-]
-
-X_BLOCKS = [
-    [(-1,-1), (-1,1), (0,0), (1,-1), (1,1)]
-]
-def get_valid_words(x, y, grid, target_words, pattern):
-    valid_words = 0
-    for block in pattern:
-        word = ''
-        for deltaX, deltaY in block:
-            new_x = deltaX + x
-            new_y = deltaY + y
-            if 0 <= new_x < len(grid) and 0 <= new_y < len(grid[0]):
-                word += grid[new_x][new_y]
-        if word in target_words:
-            valid_words += 1
-    return valid_words
-
 
 def solve2(lines: Lines) -> int:
     """Solve the problem."""
-    grid = [list(line) for line in lines]
-    ans = 0
-    target_words = {'MMASS', 'SSAMM', 'MSAMS', 'SMASM'}
-    for i in range(len(grid)):
-        for j in range(len(grid[0])):
-            ans += get_valid_words(i, j, grid, target_words, X_BLOCKS)
-    return ans
+    return 0
 
 def solve(lines: Lines) -> int:
     """Solve the problem."""
-    grid = [list(line) for line in lines]
-    ans = 0
-    target_words = {'XMAS', 'SAMX'}
-    for i in range(len(grid)):
-        for j in range(len(grid[0])):
-            ans += get_valid_words(i, j, grid, target_words, BLOCKS)
-    return ans
+    return 0
 
 
 # PART 1
@@ -158,7 +94,7 @@ def part1(lines: Lines) -> None:
     print("PART 1:")
     result = solve(lines)
     print(f"result is {result}")
-    assert result == 2464
+    assert result == -1
     print("= " * 32)
 
 
