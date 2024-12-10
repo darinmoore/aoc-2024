@@ -7,6 +7,8 @@ from pathlib import Path
 from collections import defaultdict
 from dataclasses import dataclass
 from pprint import pprint
+from copy import deepcopy
+
 import math
 import re
 
@@ -30,8 +32,23 @@ SAMPLE_CASES = [
     ),
 ]
 
-SAMPLE_CASES2 = SAMPLE_CASES
-
+SAMPLE_CASES2 = [
+    (
+        """
+        ....#.....
+        .........#
+        ..........
+        ..#.......
+        .......#..
+        ..........
+        .#..^.....
+        ........#.
+        #.........
+        ......#...
+        """,
+        6
+    ),
+]
 
 Lines = Sequence[str]
 Sections = Sequence[Lines]
@@ -68,14 +85,99 @@ def parse_sections(lines: Lines) -> Sections:
 
 
 # Solution
+def find_guard(lines):
+    for i in range(len(lines)):
+        for j in range(len(lines[0])):
+            if lines[i][j]== "^":
+                return (i,j)
+    return -1
 
+def is_loop(lines):
+    x, y = find_guard(lines)
+
+    curr_dir = 0 # start going up
+    delta_x, delta_y = DIRECTIONS[curr_dir] 
+    
+    ans = 0
+    i = 0
+    while i < 10000:
+        new_x = x + delta_x
+        new_y = y + delta_y
+
+        if not (0 <= new_x < len(lines) and 0 <= new_y < len(lines[0])):
+            return False
+        elif lines[new_x][new_y] == '#':
+            curr_dir = (curr_dir + 1) % 4
+        else:
+            x = new_x
+            y = new_y
+        delta_x, delta_y = DIRECTIONS[curr_dir]
+        i += 1
+
+    return True
+
+DIRECTIONS = [
+    (-1, 0), # UP 
+    (0, 1),  # RIGHT
+    (1, 0),  # DOWN 
+    (0, -1)  # LEFT
+]
 def solve2(lines: Lines) -> int:
     """Solve the problem."""
-    return 0
+    # first pop seen to get list of possible boulder spots
+    x, y = find_guard(lines)
+
+    curr_dir = 0 # start going up
+    delta_x, delta_y = DIRECTIONS[curr_dir] 
+    
+    ans = 0
+    seen = {(x,y)}
+    while True:
+        new_x = x + delta_x
+        new_y = y + delta_y
+
+        if not (0 <= new_x < len(lines) and 0 <= new_y < len(lines[0])):
+            break
+        elif lines[new_x][new_y] == '#':
+            curr_dir = (curr_dir + 1) % 4
+        else:
+            x = new_x
+            y = new_y
+            seen.add((x,y))
+        delta_x, delta_y = DIRECTIONS[curr_dir]
+
+    seen.remove(find_guard(lines)) # starting pos cannot be boulder
+    for boulder in seen:
+        copy_lines = deepcopy(lines)
+        boulder_x, boulder_y = boulder
+        line_str = copy_lines[boulder_x]
+        copy_lines[boulder_x] = line_str[:boulder_y] + '#' + line_str[boulder_y+1:]
+        if is_loop(copy_lines):
+            ans += 1
+
+    return ans
 
 def solve(lines: Lines) -> int:
     """Solve the problem."""
-    return 0
+    x,y = find_guard(lines)
+    seen = {(x,y)}
+    curr_dir = 0 # start going up
+    delta_x, delta_y = DIRECTIONS[curr_dir] 
+    while True:
+        new_x = x + delta_x
+        new_y = y + delta_y
+
+        if not (0 <= new_x < len(lines) and 0 <= new_y < len(lines[0])):
+            break
+        elif lines[new_x][new_y] == '#':
+            curr_dir = (curr_dir + 1) % 4
+        else:
+            x = new_x
+            y = new_y
+            seen.add((x,y))
+        delta_x, delta_y = DIRECTIONS[curr_dir]
+
+    return len(seen)
 
 
 # PART 1
@@ -94,7 +196,7 @@ def part1(lines: Lines) -> None:
     print("PART 1:")
     result = solve(lines)
     print(f"result is {result}")
-    assert result == -1
+    assert result == 5242
     print("= " * 32)
 
 
